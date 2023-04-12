@@ -47,3 +47,6 @@ class School(models.Model):
     phone = models.CharField(max_length=36)
     principle = models.CharField(max_length=36)
 
+
+
+# Create Address Model

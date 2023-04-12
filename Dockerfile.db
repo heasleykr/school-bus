@@ -1,0 +1,12 @@
+# specific template
+# docker hub for public images
+# inheriting from this version
+
+
+FROM postgres:15.0-bullseye
+
+ENV POSTGRES_PASSWORD partytime
+ENV POSTGRES_USER katie
+ENV POSTGRES_DB party_database
+
+RUN echo "hello"

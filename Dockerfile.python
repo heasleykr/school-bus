@@ -1,0 +1,12 @@
+FROM python:3.8-bullseye
+
+# tells docker where to run all the commands following.
+# scirpting means it will run this file line by line
+# so anything after this will be run in this director
+# same as 'cd /src'
+WORKDIR /src
+# ok to copy requirements into container, you have to build if
+# you change anyways. 
+# <copy file to file>
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt

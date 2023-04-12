@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-avb+(x=%4o-=@j#nzu_+mh7rmwl74z9$b7t@9nvba#%posrl_2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0']
 
 
 # Application definition
@@ -40,12 +40,23 @@ INSTALLED_APPS = [
 
     # personal
     'schoolbus.apps.SchoolbusConfig',
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+
+    # third party
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'django_bootstrap5',
+    'django_email',
+    'django_google_maps',
+    'fontawesome_6',
+    'jquery',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -58,7 +69,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,8 +91,14 @@ AUTH_USER_MODEL = 'users.User'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'party_database',
+        'USER': 'katie',
+        'PASSWORD': 'partytime',
+        # between docker containers, you can use the name 
+        # of the service in the docker-compose file
+        'HOST': 'postgres',
+        'PORT': '5432',
     }
 }
 
@@ -121,8 +138,27 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]
+STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Crispy Configuration
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# Bootstrap Configuration w/ JQuery
+BOOTSTRAP5 = {
+    'include_jquery': True,
+}
+
+# Where to send Users on Login/Logout
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# phone number field
+PHONENUMBER_DEFAULT_REGION = 'US'

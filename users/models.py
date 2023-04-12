@@ -1,14 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 from schoolbus.models import Schoolbus, School
 
 # Create your models here.
 
-
 ################ Objects Utilized by Users ###################
+BANK_ACCOUNT_CHECKING = 1
 BANK_ACCOUNT_TYPES = (
-    ("1", "Checking"),
+    (BANK_ACCOUNT_CHECKING, "Checking"),
     ("2", "Savings")
 )
 
@@ -24,6 +26,7 @@ CARD_NETWORK = (
     ("4", "Discover")
 )
 
+#### Look for 3rd Party here... 
 class CardPayment(models.Model):
     '''
     A card form of payment associated with a User
@@ -33,9 +36,11 @@ class CardPayment(models.Model):
 
     card_type = models.CharField(max_length=36, choices=CARD_TYPES)
     card_maker = models.CharField(max_length=36, choices=CARD_NETWORK)
+    # mask here 
     card_number = models.IntegerField()
     exp_month = models.IntegerField()
     exp_year = models.IntegerField()
+    # need 
 
 
 class BankAccount(models.Model):
@@ -46,6 +51,7 @@ class BankAccount(models.Model):
         return self.name
 
     bank_name = models.CharField(max_length=36)
+    # mask
     routing_number = models.IntegerField()
     account_number = models.IntegerField()
     account_type = models.CharField(max_length=36, choices=BANK_ACCOUNT_TYPES)
@@ -62,6 +68,7 @@ class Vehicle(models.Model):
     make = models.CharField(max_length=36)
     model = models.CharField(max_length=36)
     color = models.CharField(max_length=36)
+    # state 
     license_plate = models.CharField(max_length=36)
     vin = models.CharField(max_length=100)
     registartion_start_datetime = models.DateTimeField()
@@ -74,7 +81,7 @@ class InsurancePolicy(models.Model):
     '''
     def __str__(self):
         return self.name
-
+    # add DL #
     insurance_carrier = models.CharField(max_length=100)
     policy_number = models.CharField(max_length=50)
     policy_start_datetime = models.DateTimeField()
@@ -106,12 +113,13 @@ class User(AbstractUser):
         ("1", "Bank Account"),
         ("2", "Card on File")
     ))
-    emergency_contact_fist_name = models.CharField(max_length=50)
-    emergency_contact_last_name = models.CharField(max_length=50)
-    emergency_contact_phone = models.IntegerField(null=True)
+    emergency_contact_fist_name = models.CharField(max_length=50, null=True)
+    emergency_contact_last_name = models.CharField(max_length=50, null=True)
+    emergency_contact_phone = PhoneNumberField(blank=True, null=True)
 
 
     # fk
+    # put these on the payments
     bank_account = models.OneToOneField(BankAccount, on_delete=models.CASCADE, null=True)
     card_payment = models.OneToOneField(CardPayment, on_delete=models.CASCADE, null=True)
 
@@ -131,6 +139,7 @@ class Driver(models.Model):
 
     # fk
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    #### maybe foreign key here
     schoolbus = models.OneToOneField(Schoolbus, on_delete=models.CASCADE)
     school = models.OneToOneField(School, on_delete=models.CASCADE)
     vehicle = models.OneToOneField(Vehicle, on_delete=models.CASCADE)
@@ -202,6 +211,7 @@ class Trip(models.Model):
     def __str__(self):
         return self.name
 
+    # look if these work
     start_latitude = models.IntegerField()
     start_longitude = models.IntegerField()
     end_latitude = models.IntegerField()
@@ -220,6 +230,7 @@ class Ride(models.Model):
     def __str__(self):
         return self.name
 
+    # make float?
     total_payment = models.IntegerField()
     duration = models.DurationField()
     start_datetime = models.DateTimeField()

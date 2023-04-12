@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+    schoolbus:
+      build: 
+        context: .
+        dockerfile: Dockerfile.python
+      command: ./manage.py runserver 0.0.0.0:8000
+      ports:
+        # incoming requests
+        - "8000:8000"
+      # link your host directory into container source directory
+      # because the container has nothing inside, you need to have
+      # your host files accessible inside the container.
+      volumes: 
+        # not a named volume. mount host paths
+        - .:/src
+      depends_on:
+        - postgres
+    postgres:
+        image: postgres:15.0-bullseye
+        environment:
+          - POSTGRES_PASSWORD=partytime
+          - POSTGRES_USER=katie
+          - POSTGRES_DB=party_database
+        ports:
+          - "5432:5432"
+        volumes:
+          - schoolbus_db:/var/lib/postgresql/data
+# define variables
+volumes:
+  schoolbus_db:

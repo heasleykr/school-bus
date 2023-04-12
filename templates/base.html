@@ -1,0 +1,113 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load django_bootstrap5 %}
+
+<!-- load css and javascript -->
+{% bootstrap_css %}         
+{% bootstrap_javascript%}
+<!-- load icons -->
+{% load fontawesome_6 %}
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- GoogleFonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&family=Nunito&family=Poppins:wght@100&family=Rancho&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Rancho&display=swap" rel="stylesheet"> 
+
+    <!-- Original CSS -->
+    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
+
+    {% fontawesome_6_static %}
+
+    <title>{% block title %}Schoolbus{% endblock title%}</title>
+
+</head>
+<body>
+    <nav class="shadow navbar navbar-expand-lg navbar-dark">
+        <div id="navMain" class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">
+            <img id="schoolbusLogo" src="{% static 'img/schoolbus_teal.png' %}" alt="">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto justify-content-end">
+
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                        <a class="nav-link" href="{% url 'request_ride' %}">Request Ride</a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" href="{% url 'all_schools' %}">See Schools</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'trips' %}">Past Rides</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'inbox' %}">Inbox</a></li>
+                        <div class="dropdown navClass">
+                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ user.username }}
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
+                                <!-- TOOD: Add link to profile here -->
+                                <li>
+                                    <form action="{% url 'logout' %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit">Log out</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Loved -->
+                        <li><a class="nav-link" href="{% url 'approved_schools' %}"><i class="far fa-heart"></i></a></li>
+
+
+                    {% else %}
+                        <form class="form-inline ml-auto">
+                            <a href="{% url 'login' %}" class="btn btn-outline-secondary">Log In</a>
+                            <a href="{% url 'signup' %}" class="btn btn-outline-secondary ml-2">Sign Up</a>
+                        </form>
+                    {% endif %}
+                </ul>
+            </div> 
+        </div>
+    </nav>
+    <main>
+        <div id="main_Back">
+            <div id="input">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </main>
+    <div id="fwrapper">
+        <footer id="footer">
+            <div id="grid1" class="d-flex justify-content-center">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <img id="schoolbusLogo" src="{% static 'img/schoolbus_teal.png' %}" alt="">
+                </a>
+            </div>
+            <div id="grid2" class="d-flex justify-content-center">
+                <i class="fab fa-twitter"></i>
+                <i class="fab fa-pinterest-square"></i>
+                <i class="fab fa-instagram"></i>
+            </div>
+            <div id="grid3" class="d-flex justify-content-center">
+                <p id="link"><a href="{% url 'request_ride' %}">Find a Ride</a></p>
+                | <p id="register"><a href="{% url 'signup' %}">Register</a></p>
+            </div>
+            <div id="grid4" class="d-flex justify-content-start">
+                <p id="copyright">Copyright reserved &copy; 2023 Katelynn Heasley</p>
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>

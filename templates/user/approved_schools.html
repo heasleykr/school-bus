@@ -1,0 +1,29 @@
+<!-- templates/user/approved_schools.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Approved Schools{% endblock title %}
+
+{% block content %}
+<div id="homeView">
+
+
+    <!-- Logged In View -->
+    {% if user.is_authenticated %}
+    <div><
+        <h4 class="display-4 d-flex justify-content-center">TODO: List of Approved Schools for User Here</h4>
+
+    </div> 
+   
+
+
+    <!-- SignUp View -->
+    {% else %}
+    <div>
+        <h3>TODO: Not logged in. Sign Up.....</h3>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}{{block.super}} Hello World {% endblock %}
+
+{% block body %}
+<div>
+    <h1>School List</h1>
+        <ul>
+        {% for school in schools %}
+            <li>{{ school.name }}</li>
+        {% empty %}
+            <li>Schools not found.</li>
+        {% endfor %}
+        </ul>
+</div>
+
+
+
+
+
+{% endblock %}
